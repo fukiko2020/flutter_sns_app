@@ -1,7 +1,8 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'comment.freezed.dart';
+part 'comment.g.dart';
 
 @freezed
 class Comment with _$Comment {
