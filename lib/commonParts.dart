@@ -18,15 +18,25 @@ class FavoriteWidgetState extends ConsumerState<FavoriteWidget> {
 
   @override
   void initState() {
-    getFavorite(widget.type, widget.index).then((value) => isFavorite = value);
     super.initState();
+    Future(() async {
+      final favoriteData = await getFavorite(widget.type, widget.index);
+      setState(
+        () {
+          isFavorite = favoriteData;
+        },
+      );
+    });
+    // print('initialized favorite state ${widget.type}${widget.index}');
   }
 
   void _toggleFavorite() {
     setFavorite(widget.type, widget.index, isFavorite);
-    setState(() {
-      isFavorite = !isFavorite;
-    });
+    setState(
+      () {
+        isFavorite = !isFavorite;
+      },
+    );
   }
 
   @override
@@ -54,7 +64,7 @@ class MyBottomNavigationBar extends ConsumerWidget {
         Navigator.of(context).pushNamed('/albums');
         break;
       case 2:
-        Navigator.of(context).pushNamed('/pictures');
+        Navigator.of(context).pushNamed('/pictures', arguments: null);
         break;
       case 3:
         Navigator.of(context).pushNamed('/my-page');
@@ -86,6 +96,7 @@ class MyBottomNavigationBar extends ConsumerWidget {
       onTap: (index) => toOtherPages(index, context, ref),
       currentIndex: ref.watch(currentTabProvider),
       selectedItemColor: Colors.orange,
+      unselectedItemColor: Colors.black54,
     );
   }
 }

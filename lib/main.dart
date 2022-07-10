@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_sns_app/pages/albums.dart';
+import 'package:flutter_sns_app/pages/pictures.dart';
 import 'package:flutter_sns_app/pages/posts.dart';
 
 
@@ -24,8 +26,8 @@ class MySnsApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const PostsPage(),
-        // '/albums': (context) => const AlbumsPage(),
-        // '/pictures': (context) => const PicturesPage(),
+        '/albums': (context) => const AlbumsPage(),
+        '/pictures': (context) => const PicturesPage(),
         // '/my-page': (context) => const MyPage(),
         // '/my-page/settings': (context) => const SettingsPage(),
       },
