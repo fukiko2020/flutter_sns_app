@@ -20,27 +20,7 @@ class PicturesPage extends ConsumerWidget {
             : getPictureList(albumIndex: albumIndex as int),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                ), // カラム数
-                itemCount: snapshot.data!.length,
-                padding: const EdgeInsets.all(8),
-                itemBuilder: (context, index) {
-                  final picture = snapshot.data![index];
-                  return Stack(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.all(2),
-                        child: Image.network(picture.thumbnailUrl),
-                      ),
-                      Container(
-                        alignment: Alignment.bottomRight,
-                        child: FavoriteWidget(index: picture.id, type: 'picture'),
-                      ),
-                    ],
-                  );
-                });
+            return PicturesWidget(pictureList: snapshot.data!);
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
@@ -50,5 +30,40 @@ class PicturesPage extends ConsumerWidget {
       ),
       bottomNavigationBar: const MyBottomNavigationBar(),
     );
+  }
+}
+
+class PicturesWidget extends ConsumerWidget {
+  final List<Picture> pictureList;
+  final bool isMyPage;
+  const PicturesWidget({
+    super.key,
+    required this.pictureList,
+    this.isMyPage = false,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+        ), // カラム数
+        itemCount: pictureList.length,
+        padding: const EdgeInsets.all(8),
+        itemBuilder: (context, index) {
+          final picture = pictureList[index];
+          return Stack(
+            children: [
+              Container(
+                margin: const EdgeInsets.all(2),
+                child: Image.network(picture.thumbnailUrl),
+              ),
+              Container(
+                alignment: Alignment.bottomRight,
+                child: FavoriteWidget(id: picture.id, type: 'picture'),
+              ),
+            ],
+          );
+        });
   }
 }

@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_sns_app/repository.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_sns_app/providers.dart';
+import 'package:flutter_sns_app/repository.dart';
 
 class FavoriteWidget extends ConsumerStatefulWidget {
-  final int index;
+  final int id;
   final String type; // 'post' or 'album' or 'picture'
-  const FavoriteWidget({super.key, required this.index, required this.type});
+  final bool isMyPage;
+  const FavoriteWidget({
+    super.key,
+    required this.id,
+    required this.type,
+    this.isMyPage = false,
+  });
 
   @override
   ConsumerState<FavoriteWidget> createState() => FavoriteWidgetState();
@@ -20,24 +25,48 @@ class FavoriteWidgetState extends ConsumerState<FavoriteWidget> {
   void initState() {
     super.initState();
     Future(() async {
-      final favoriteData = await getFavorite(widget.type, widget.index);
+      final favoriteData = await getFavorite(widget.type, widget.id);
       setState(
         () {
           isFavorite = favoriteData;
         },
       );
     });
-    // print('initialized favorite state ${widget.type}${widget.index}');
   }
 
-  void _toggleFavorite() {
-    setFavorite(widget.type, widget.index, isFavorite);
-    setState(
-      () {
-        isFavorite = !isFavorite;
-      },
-    );
+  // 写真・アルバム・投稿：マイページからお気に入り削除されたらマイページから削除
+  // アルバムからお気に入りされたらアルバム内のすべての写真をお気に入り追加かつsetState
+  // マイページからのお気に入り削除でなければsetState
+
+  // マイページからのお気に入り削除はまだアルバムにしか対応できていない
+  void _toggleFavorite() async {
+    setFavorite(widget.type, widget.id, isFavorite);
+    // マイページからお気に入り削除されたら実行
+    // マイページからお気に入り追加はできないから追加or削除の条件分岐は不要
+    if (widget.type == 'album') {
+      final newFavorites = await getPictureList(albumIndex: widget.id);
+      for (final item in newFavorites) {
+        setFavorite('picture', item.id, isFavorite);
+      }
+      if (widget.isMyPage) {
+        print('remove ${widget.id}');
+        ref.read(favoriteAlbumsProvider).removeMyPageFavorite(widget.id);
+      }
+    }
+
+    if (!widget.isMyPage) {
+      setState(
+        () {
+          isFavorite = !isFavorite;
+        },
+      );
+    }
+    // if (widget.isMyPage && widget.type == 'album') {
+    //   print('remove ${widget.id}');
+    //   ref.read(favoriteAlbumsProvider).removeMyPageFavorite(widget.id);
+    // }
   }
+
 
   @override
   Widget build(BuildContext context) {

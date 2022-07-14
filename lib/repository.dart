@@ -34,6 +34,20 @@ Future<List<Post>> getPostList() async {
   }
 }
 
+Future<List<Post>> getFavoritePostList() async {
+  final List<Post> postList;
+  final response = await http.get(
+    Uri.parse('https://jsonplaceholder.typicode.com/posts'),
+  );
+  if (response.statusCode == 200) {
+    final List<dynamic> postData = convert.jsonDecode(response.body);
+    postList = postData.map((e) => Post.fromJson(e)).toList();
+    return Future<List<Post>>.value(postList);
+  } else {
+    throw Exception('Failed to fetch data');
+  }
+}
+
 Future<List<Album>> getAlbumList() async {
   final List<Album> albumList;
   final response = await http.get(
@@ -63,15 +77,36 @@ Future<List<Picture>> getPictureList({int? albumIndex}) async {
   }
 }
 
-Future<bool> getFavorite(String type, int index) async {
+Future<bool> getFavorite(String type, int id) async {
   final data = await SharedPreferences.getInstance();
-  final isFavorite = data.getBool('$type$index');
+  final isFavorite = data.getBool('$type$id');
   return isFavorite == null ? Future.value(false) : Future.value(isFavorite);
 }
 
-void setFavorite(String type, int index, bool isFavorite) async {
+void setFavorite(String type, int id, bool isFavorite) async {
   final data = await SharedPreferences.getInstance();
-  data.setBool('$type$index', !isFavorite);
-  print('set favorite $type$index');
+  data.setBool('$type$id', !isFavorite);
+  print('set favorite $type: $id');
 }
 
+Future<String> getUsername() async {
+  final data = await SharedPreferences.getInstance();
+  final username = data.getString('username');
+  return username == null ? Future.value('ゲスト') : Future.value(username);
+}
+
+void setUsername(String newUsername) async {
+  final data = await SharedPreferences.getInstance();
+  data.setString('username', newUsername);
+}
+
+Future<bool> getIsDarkModeData() async {
+  final data = await SharedPreferences.getInstance();
+  final isDarkMode = data.getBool('isDarkMode');
+  return isDarkMode == null ? Future.value(true) : Future.value(isDarkMode);
+}
+
+void setIsDarkModeData(bool currentValue) async {
+  final data = await SharedPreferences.getInstance();
+  data.setBool('isDarkMode', !currentValue);
+}
