@@ -33,6 +33,7 @@ class PicturesPage extends ConsumerWidget {
   }
 }
 
+// 写真一覧とマイページのお気に入り投稿一覧で使用
 class PicturesWidget extends ConsumerWidget {
   final List<Picture> pictureList;
   final bool isMyPage;
@@ -60,7 +61,11 @@ class PicturesWidget extends ConsumerWidget {
               ),
               Container(
                 alignment: Alignment.bottomRight,
-                child: FavoriteWidget(id: picture.id, type: 'picture'),
+                child: FavoriteWidget(
+                  id: picture.id,
+                  type: 'picture',
+                  isMyPage: isMyPage,
+                ),
               ),
             ],
           );

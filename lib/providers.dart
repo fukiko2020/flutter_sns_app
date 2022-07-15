@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sns_app/models/album.dart';
 import 'package:flutter_sns_app/models/picture.dart';
+import 'package:flutter_sns_app/models/post.dart';
 import 'package:flutter_sns_app/models/user.dart';
 import 'package:flutter_sns_app/repository.dart';
 
@@ -14,20 +15,20 @@ final userListProvider = FutureProvider<List<User>>(
   },
 );
 
-final favoriteAlbumsProvider = ChangeNotifierProvider<FavoriteAlbumNotifier>(
-    (ref) => FavoriteAlbumNotifier());
+final favoritePostsProvider = ChangeNotifierProvider<FavoritePostNotifier>(
+    (ref) => FavoritePostNotifier());
 
-class FavoriteAlbumNotifier extends ChangeNotifier {
-  List<Album> favoriteList = [];
+class FavoritePostNotifier extends ChangeNotifier {
+  List<Post> favoriteList = [];
 
-  Future getFavoriteAlbumList() async {
-    print('---execute getFavoriteAlbumList---');
-    final allAlbums = await getAlbumList();
+  Future getFavoritePostList() async {
+    print('---execute getFavoritePostList---');
+    final allPosts = await getPostList();
     favoriteList = []; // 初期化して重複を防ぐ
-    await Future.forEach(allAlbums, (Album item) async {
-      final isFavorite = await getFavorite('album', item.id);
+    await Future.forEach(allPosts, (Post item) async {
+      final isFavorite = await getFavorite('post', item.id);
       if (isFavorite) {
-        print('favorite id: ${item.id}');
+        print('favorite post id: ${item.id}');
         favoriteList.add(item);
       }
     });
@@ -43,8 +44,41 @@ class FavoriteAlbumNotifier extends ChangeNotifier {
     notifyListeners();
   }
 }
-final favoritePicturesProvider = ChangeNotifierProvider<FavoritePictureNotifier>(
-    (ref) => FavoritePictureNotifier());
+
+final favoriteAlbumsProvider = ChangeNotifierProvider<FavoriteAlbumNotifier>(
+    (ref) => FavoriteAlbumNotifier());
+
+class FavoriteAlbumNotifier extends ChangeNotifier {
+  List<Album> favoriteList = [];
+
+  Future getFavoriteAlbumList() async {
+    print('---execute getFavoriteAlbumList---');
+    final allAlbums = await getAlbumList();
+    favoriteList = []; // 初期化して重複を防ぐ
+    await Future.forEach(allAlbums, (Album item) async {
+      final isFavorite = await getFavorite('album', item.id);
+      if (isFavorite) {
+        print('favorite album id: ${item.id}');
+        favoriteList.add(item);
+      }
+    });
+    print('favorite in provider: $favoriteList');
+    notifyListeners();
+  }
+
+  // マイページでお気に入りから削除されたら実行
+  void removeMyPageFavorite(int id) {
+    final removedItem = favoriteList.firstWhere((element) => element.id == id);
+    print('removed item in provider: ${removedItem.id}');
+    favoriteList.remove(removedItem);
+    notifyListeners();
+  }
+}
+
+final favoritePicturesProvider =
+    ChangeNotifierProvider<FavoritePictureNotifier>(
+  (ref) => FavoritePictureNotifier(),
+);
 
 class FavoritePictureNotifier extends ChangeNotifier {
   List<Picture> favoriteList = [];
@@ -56,7 +90,7 @@ class FavoritePictureNotifier extends ChangeNotifier {
     await Future.forEach(allPictures, (Picture item) async {
       final isFavorite = await getFavorite('picture', item.id);
       if (isFavorite) {
-        print('favorite id: ${item.id}');
+        print('favorite picture id: ${item.id}');
         favoriteList.add(item);
       }
     });

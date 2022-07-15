@@ -31,6 +31,7 @@ class AlbumsPage extends ConsumerWidget {
   }
 }
 
+// アルバム一覧とマイページのお気に入り投稿一覧で使用
 class AlbumsWidget extends ConsumerWidget {
   final List<Album> albumList;
   final bool isMyPage;
@@ -118,7 +119,11 @@ class AlbumWidget extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  FavoriteWidget(id: id, type: 'album', isMyPage: isMyPage),
+                  FavoriteWidget(
+                    id: id,
+                    type: 'album',
+                    isMyPage: isMyPage,
+                  ),
                 ],
               ),
               Container(

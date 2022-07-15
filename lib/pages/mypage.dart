@@ -16,12 +16,15 @@ class MyPage extends ConsumerStatefulWidget {
 class MyPageState extends ConsumerState<MyPage> {
   @override
   void initState() {
+    ref.read(favoritePostsProvider).getFavoritePostList();
     ref.read(favoriteAlbumsProvider).getFavoriteAlbumList();
+    ref.read(favoritePicturesProvider).getFavoritePictureList();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final postListProvider = ref.watch(favoritePostsProvider);
     final albumListProvider = ref.watch(favoriteAlbumsProvider);
     final pictureListProvider = ref.watch(favoritePicturesProvider);
     return DefaultTabController(
@@ -66,7 +69,10 @@ class MyPageState extends ConsumerState<MyPage> {
         ),
         body: TabBarView(
           children: [
-            const PostsWidget(favorite: true),
+            PostsWidget(
+              postList: postListProvider.favoriteList,
+              isMyPage: true,
+            ),
             AlbumsWidget(
               albumList: albumListProvider.favoriteList,
               isMyPage: true,

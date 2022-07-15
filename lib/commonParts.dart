@@ -34,39 +34,40 @@ class FavoriteWidgetState extends ConsumerState<FavoriteWidget> {
     });
   }
 
-  // 写真・アルバム・投稿：マイページからお気に入り削除されたらマイページから削除
-  // アルバムからお気に入りされたらアルバム内のすべての写真をお気に入り追加かつsetState
-  // マイページからのお気に入り削除でなければsetState
-
   // マイページからのお気に入り削除はまだアルバムにしか対応できていない
   void _toggleFavorite() async {
     setFavorite(widget.type, widget.id, isFavorite);
-    // マイページからお気に入り削除されたら実行
-    // マイページからお気に入り追加はできないから追加or削除の条件分岐は不要
+
+    // アルバムにいいね/解除でそのアルバムに属する写真もいいね/解除
     if (widget.type == 'album') {
       final newFavorites = await getPictureList(albumIndex: widget.id);
       for (final item in newFavorites) {
         setFavorite('picture', item.id, isFavorite);
       }
-      if (widget.isMyPage) {
-        print('remove ${widget.id}');
-        ref.read(favoriteAlbumsProvider).removeMyPageFavorite(widget.id);
-      }
     }
 
-    if (!widget.isMyPage) {
+    // マイページのお気に入り一覧からなら表示リストから削除
+    if (widget.isMyPage) {
+      switch (widget.type) {
+        case 'post':
+          ref.read(favoritePostsProvider).removeMyPageFavorite(widget.id);
+          break;
+        case 'album':
+          ref.read(favoriteAlbumsProvider).removeMyPageFavorite(widget.id);
+          break;
+        case 'picture':
+          ref.read(favoritePicturesProvider).removeMyPageFavorite(widget.id);
+          break;
+      }
+    } else {
+      // 投稿一覧/アルバム一覧/写真一覧ページからならステートを変更
       setState(
         () {
           isFavorite = !isFavorite;
         },
       );
     }
-    // if (widget.isMyPage && widget.type == 'album') {
-    //   print('remove ${widget.id}');
-    //   ref.read(favoriteAlbumsProvider).removeMyPageFavorite(widget.id);
-    // }
   }
-
 
   @override
   Widget build(BuildContext context) {

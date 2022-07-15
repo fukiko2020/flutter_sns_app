@@ -6,9 +6,11 @@ import 'package:flutter_sns_app/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+const url = 'https://jsonplaceholder.typicode.com';
+
 Future<List<User>> getUsers() async {
   final response = await http.get(
-    Uri.parse('https://jsonplaceholder.typicode.com/users'),
+    Uri.parse('$url/users'),
   );
 
   if (response.statusCode == 200) {
@@ -23,21 +25,7 @@ Future<List<User>> getUsers() async {
 Future<List<Post>> getPostList() async {
   final List<Post> postList;
   final response = await http.get(
-    Uri.parse('https://jsonplaceholder.typicode.com/posts'),
-  );
-  if (response.statusCode == 200) {
-    final List<dynamic> postData = convert.jsonDecode(response.body);
-    postList = postData.map((e) => Post.fromJson(e)).toList();
-    return Future<List<Post>>.value(postList);
-  } else {
-    throw Exception('Failed to fetch data');
-  }
-}
-
-Future<List<Post>> getFavoritePostList() async {
-  final List<Post> postList;
-  final response = await http.get(
-    Uri.parse('https://jsonplaceholder.typicode.com/posts'),
+    Uri.parse('$url/posts'),
   );
   if (response.statusCode == 200) {
     final List<dynamic> postData = convert.jsonDecode(response.body);
@@ -51,7 +39,7 @@ Future<List<Post>> getFavoritePostList() async {
 Future<List<Album>> getAlbumList() async {
   final List<Album> albumList;
   final response = await http.get(
-    Uri.parse('https://jsonplaceholder.typicode.com/albums'),
+    Uri.parse('$url/albums'),
   );
   if (response.statusCode == 200) {
     final List<dynamic> albumData = convert.jsonDecode(response.body);
@@ -66,7 +54,7 @@ Future<List<Picture>> getPictureList({int? albumIndex}) async {
   final List<Picture> pictureList;
   final queryParam = albumIndex == null ? '' : '?albumId=$albumIndex';
   final response = await http.get(
-    Uri.parse('https://jsonplaceholder.typicode.com/photos$queryParam'),
+    Uri.parse('$url/photos$queryParam'),
   );
   if (response.statusCode == 200) {
     final List<dynamic> pictureData = convert.jsonDecode(response.body);
