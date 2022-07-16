@@ -33,14 +33,11 @@ class MySnsAppState extends ConsumerState<MySnsApp> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = ref.watch(isDarkModeProvider).isDarkMode;
-    // return isDarkMode.when(
-    // data: (isDarkMode) {
     return MaterialApp(
       title: 'Flutter SNS App',
-      // theme: ThemeData.light(),
       theme: isDarkMode
-      ? ThemeData.light()
-      : ThemeData.dark(),
+      ? ThemeData.dark()
+      : ThemeData.light(),
       initialRoute: '/',
       routes: {
         '/': (context) => const PostsPage(),
@@ -52,9 +49,5 @@ class MySnsAppState extends ConsumerState<MySnsApp> {
             const ChangeNamePage(),
       },
     );
-    // },
-    // error: (err, stack) => Text('Error: $err'),
-    // loading: () => const CircularProgressIndicator(),
-    // );
   }
 }

@@ -126,8 +126,10 @@ class MyBottomNavigationBar extends ConsumerWidget {
       ],
       onTap: (index) => toOtherPages(index, context, ref),
       currentIndex: ref.watch(currentTabProvider),
-      selectedItemColor: Colors.orange,
-      unselectedItemColor: Colors.black54,
+      selectedItemColor: Colors.blue,
+      unselectedItemColor: ref.watch(isDarkModeProvider).isDarkMode
+          ? Colors.white
+          : Colors.black38,
     );
   }
 }

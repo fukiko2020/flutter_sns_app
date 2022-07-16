@@ -89,9 +89,6 @@ class PostWidget extends ConsumerWidget {
                   margin: const EdgeInsets.only(top: 20),
                   child: Text(
                     '@${data[post.userId].username}',
-                    style: const TextStyle(
-                      color: Colors.grey,
-                    ),
                   ),
                 ),
               ],

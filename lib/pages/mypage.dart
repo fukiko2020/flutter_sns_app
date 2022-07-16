@@ -58,19 +58,16 @@ class MyPageState extends ConsumerState<MyPage> {
               Tab(
                 icon: Icon(
                   Icons.speaker_notes,
-                  color: Colors.black,
                 ),
               ),
               Tab(
                 icon: Icon(
                   Icons.collections,
-                  color: Colors.black,
                 ),
               ),
               Tab(
                 icon: Icon(
                   Icons.image,
-                  color: Colors.black,
                 ),
               ),
             ],

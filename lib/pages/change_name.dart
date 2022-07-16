@@ -12,7 +12,7 @@ class ChangeNamePage extends ConsumerStatefulWidget {
 
 class ChangeNamePageState extends ConsumerState<ChangeNamePage> {
   final formKey = GlobalKey<FormState>();
-  String formValue = 'ゲスト';
+  String formValue = '';
 
   @override
   void initState() {

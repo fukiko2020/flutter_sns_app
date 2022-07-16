@@ -138,9 +138,6 @@ class AlbumWidgetState extends ConsumerState<AlbumWidget> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           '@${data[widget.album.userId].username}',
-                          style: const TextStyle(
-                            color: Colors.blueGrey,
-                          ),
                         ),
                       ),
                     ],
