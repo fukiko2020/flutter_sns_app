@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_sns_app/commonParts.dart';
+import 'package:flutter_sns_app/common_parts.dart';
 import 'package:flutter_sns_app/models/album.dart';
 import 'package:flutter_sns_app/providers.dart';
 import 'package:flutter_sns_app/repository.dart';
@@ -23,7 +23,9 @@ class AlbumsPage extends ConsumerWidget {
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
-            return const CircularProgressIndicator();
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
         },
       ),

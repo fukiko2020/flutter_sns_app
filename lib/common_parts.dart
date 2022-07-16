@@ -37,13 +37,13 @@ class FavoriteWidgetState extends ConsumerState<FavoriteWidget> {
   }
 
   void _toggleFavorite() async {
-    setFavorite(widget.type, widget.id, isFavorite);
+    setFavorite(widget.type, widget.id, isFavorite: isFavorite);
 
     // アルバムにいいね/解除でそのアルバムに属する写真もいいね/解除
     if (widget.type == 'album') {
       final newFavorites = await getPictureList(albumIndex: widget.id);
       for (final item in newFavorites) {
-        setFavorite('picture', item.id, isFavorite);
+        setFavorite('picture', item.id, isFavorite: isFavorite);
       }
     }
 

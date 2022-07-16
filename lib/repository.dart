@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 const url = 'https://jsonplaceholder.typicode.com';
 
+// jsonPlaceholder データのユーザー情報を取得
 Future<List<User>> getUsers() async {
   final response = await http.get(
     Uri.parse('$url/users'),
@@ -65,36 +66,43 @@ Future<List<Picture>> getPictureList({int? albumIndex}) async {
   }
 }
 
+// ここから shared preferences
+
+// type ('post' / 'album' / 'picture') の指定された id のいいね状態を取得
 Future<bool> getFavorite(String type, int id) async {
   final data = await SharedPreferences.getInstance();
   final isFavorite = data.getBool('$type$id');
   return isFavorite == null ? Future.value(false) : Future.value(isFavorite);
 }
 
-void setFavorite(String type, int id, bool isFavorite) async {
+// type ('post' / 'album' / 'picture') の指定された id のいいねを設定
+void setFavorite(String type, int id, {bool isFavorite = false}) async {
   final data = await SharedPreferences.getInstance();
   data.setBool('$type$id', !isFavorite);
-  print('set favorite $type: $id');
 }
 
+// 自分のユーザー名を取得
 Future<String> getUsername() async {
   final data = await SharedPreferences.getInstance();
   final username = data.getString('username');
   return username == null ? Future.value('ゲスト') : Future.value(username);
 }
 
+// 自分のユーザー名を変更
 void setUsername(String newUsername) async {
   final data = await SharedPreferences.getInstance();
   data.setString('username', newUsername);
 }
 
+// ダークモード設定を取得
 Future<bool> getIsDarkModeData() async {
   final data = await SharedPreferences.getInstance();
   final isDarkMode = data.getBool('isDarkMode');
   return isDarkMode == null ? Future.value(true) : Future.value(isDarkMode);
 }
 
-void setIsDarkModeData(bool currentValue) async {
+// currentValue: 現在の isDarkMode の値
+void setIsDarkModeData({bool currentValue = false}) async {
   final data = await SharedPreferences.getInstance();
   data.setBool('isDarkMode', !currentValue);
 }

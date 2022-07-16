@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_sns_app/commonParts.dart';
+import 'package:flutter_sns_app/common_parts.dart';
 import 'package:flutter_sns_app/pages/albums.dart';
 import 'package:flutter_sns_app/pages/pictures.dart';
 import 'package:flutter_sns_app/pages/posts.dart';

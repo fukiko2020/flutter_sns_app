@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_sns_app/commonParts.dart';
+import 'package:flutter_sns_app/common_parts.dart';
 import 'package:flutter_sns_app/models/post.dart';
 import 'package:flutter_sns_app/providers.dart';
 import 'package:flutter_sns_app/repository.dart';
@@ -13,7 +13,7 @@ class PostsPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('投稿'),
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: false,  // 戻るボタンを非表示に
       ),
       body: FutureBuilder<List<Post>>(
           future: getPostList(),
@@ -23,7 +23,9 @@ class PostsPage extends ConsumerWidget {
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else {
-              return const CircularProgressIndicator();
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
             }
           }
           ),
@@ -45,6 +47,8 @@ class PostsWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ListView.builder(
+      // ListViewは何も指定しないと利用可能なスペースを全て使用してしまう
+      // shrinkWrap を true にすると、ListView が必要なスペースのみ使うようになる
       shrinkWrap: true,
       itemCount: postList.length,
       itemBuilder: (context, index) {
