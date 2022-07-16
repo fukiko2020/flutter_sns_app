@@ -24,14 +24,16 @@ class FavoriteWidgetState extends ConsumerState<FavoriteWidget> {
   @override
   void initState() {
     super.initState();
-    Future(() async {
-      final favoriteData = await getFavorite(widget.type, widget.id);
-      setState(
-        () {
-          isFavorite = favoriteData;
-        },
-      );
-    });
+    Future(
+      () async {
+        final favoriteData = await getFavorite(widget.type, widget.id);
+        setState(
+          () {
+            isFavorite = favoriteData;
+          },
+        );
+      },
+    );
   }
 
   void _toggleFavorite() async {

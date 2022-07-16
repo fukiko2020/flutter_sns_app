@@ -55,8 +55,8 @@ class ChangeNamePageState extends ConsumerState<ChangeNamePage> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'ユーザー名を入力してください。';
-                    } else if (value.length > 30) {
-                      return 'ユーザー名は30文字以内で入力してください。';
+                    } else if (value.length > 20) {
+                      return 'ユーザー名は20文字以内で入力してください。';
                     }
                     return null;
                   },

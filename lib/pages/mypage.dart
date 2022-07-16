@@ -5,6 +5,7 @@ import 'package:flutter_sns_app/pages/albums.dart';
 import 'package:flutter_sns_app/pages/pictures.dart';
 import 'package:flutter_sns_app/pages/posts.dart';
 import 'package:flutter_sns_app/providers.dart';
+import 'package:flutter_sns_app/repository.dart';
 
 class MyPage extends ConsumerStatefulWidget {
   const MyPage({Key? key}) : super(key: key);
@@ -19,6 +20,14 @@ class MyPageState extends ConsumerState<MyPage> {
     ref.read(favoritePostsProvider).getFavoritePostList();
     ref.read(favoriteAlbumsProvider).getFavoriteAlbumList();
     ref.read(favoritePicturesProvider).getFavoritePictureList();
+    Future(
+      () async {
+        final username = await getUsername();
+        ref.read(usernameProvider.state).update(
+              (state) => state = username,
+            );
+      },
+    );
     super.initState();
   }
 
@@ -42,7 +51,7 @@ class MyPageState extends ConsumerState<MyPage> {
           ],
           title: Consumer(
             builder: (context, ref, child) =>
-                Text('${ref.watch(usernameProvider.state)}のお気に入り'),
+                Text('${ref.watch(usernameProvider)}のお気に入り'),
           ),
           bottom: const TabBar(
             tabs: [
