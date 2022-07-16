@@ -13,6 +13,7 @@ class AlbumsPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('アルバム'),
+        automaticallyImplyLeading: false,
       ),
       body: FutureBuilder<List<Album>>(
         future: getAlbumList(),
@@ -46,9 +47,11 @@ class AlbumsWidget extends ConsumerWidget {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
+        mainAxisSpacing: 16,
+        crossAxisSpacing: 16,
       ), // カラム数
       itemCount: albumList.length,
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(16),
       shrinkWrap: true,
       itemBuilder: (context, index) {
         final album = albumList[index];
@@ -59,7 +62,7 @@ class AlbumsWidget extends ConsumerWidget {
   }
 }
 
-class AlbumWidget extends ConsumerWidget {
+class AlbumWidget extends ConsumerStatefulWidget {
   final int id;
   final Album album;
   final bool isMyPage;
@@ -71,6 +74,26 @@ class AlbumWidget extends ConsumerWidget {
     this.isMyPage = false,
   });
 
+  @override
+  ConsumerState<AlbumWidget> createState() => AlbumWidgetState();
+}
+
+class AlbumWidgetState extends ConsumerState<AlbumWidget> {
+  String backImgUrl = '';
+
+  @override
+  void initState() {
+    super.initState();
+    Future(() async {
+      final backImg = await getPictureList(albumIndex: widget.id);
+      setState(
+        () {
+          backImgUrl = backImg[0].thumbnailUrl;
+        },
+      );
+    });
+  }
+
   void toPicturesPage(int albumIndex, BuildContext context, WidgetRef ref) {
     ref.read(currentTabProvider.state).update((state) => 2); // タブをpictures にする
     Navigator.of(context).pushNamed(
@@ -80,16 +103,20 @@ class AlbumWidget extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final userList = ref.watch(userListProvider);
     return GestureDetector(
-      onTap: () => toPicturesPage(id, context, ref),
+      onTap: () => toPicturesPage(widget.id, context, ref),
       child: Container(
-        margin: const EdgeInsets.all(12),
         padding: const EdgeInsets.only(left: 8, top: 20, right: 8),
         decoration: BoxDecoration(
-          image: const DecorationImage(
-            image: NetworkImage('https://via.placeholder.com/600/24f355'),
+          image: DecorationImage(
+            image: NetworkImage(backImgUrl),
+            colorFilter: ColorFilter.mode(
+              Colors.white.withOpacity(0.6),
+              BlendMode.dstATop,
+            ),
+            fit: BoxFit.cover,
           ),
           borderRadius: BorderRadius.circular(12),
         ),
@@ -104,25 +131,24 @@ class AlbumWidget extends ConsumerWidget {
                       Container(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          data[album.userId].name,
-                          // style: const TextStyle(fontSize: 12),
+                          data[widget.album.userId].name,
                         ),
                       ),
                       Container(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          '@${data[album.userId].username}',
+                          '@${data[widget.album.userId].username}',
                           style: const TextStyle(
-                            color: Colors.grey,
+                            color: Colors.blueGrey,
                           ),
                         ),
                       ),
                     ],
                   ),
                   FavoriteWidget(
-                    id: id,
+                    id: widget.id,
                     type: 'album',
-                    isMyPage: isMyPage,
+                    isMyPage: widget.isMyPage,
                   ),
                 ],
               ),
@@ -130,7 +156,7 @@ class AlbumWidget extends ConsumerWidget {
                 alignment: Alignment.centerLeft,
                 margin: const EdgeInsets.only(top: 8),
                 child: Text(
-                  album.title,
+                  widget.album.title,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

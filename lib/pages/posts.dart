@@ -13,6 +13,7 @@ class PostsPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('投稿'),
+        automaticallyImplyLeading: false,
       ),
       body: FutureBuilder<List<Post>>(
           future: getPostList(),

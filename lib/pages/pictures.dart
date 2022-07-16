@@ -13,6 +13,9 @@ class PicturesPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('写真'),
+        automaticallyImplyLeading: albumIndex == null
+            ? false
+            : true,
       ),
       body: FutureBuilder<List<Picture>>(
         future: albumIndex == null

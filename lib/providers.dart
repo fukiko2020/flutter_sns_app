@@ -127,3 +127,18 @@ class IsDarkModeNotifier extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+// アルバムの背景画像を設定
+final backImageProvider = ChangeNotifierProvider<BackImageNotifier>(
+  (ref) => BackImageNotifier(),
+);
+
+class BackImageNotifier extends ChangeNotifier {
+  String imgUrl = '';
+
+  Future getBackImage(int albumIndex) async {
+    final pictureList = await getPictureList(albumIndex: albumIndex);
+    imgUrl = pictureList[0].thumbnailUrl;
+    notifyListeners();
+  }
+}

@@ -34,7 +34,6 @@ class FavoriteWidgetState extends ConsumerState<FavoriteWidget> {
     });
   }
 
-  // マイページからのお気に入り削除はまだアルバムにしか対応できていない
   void _toggleFavorite() async {
     setFavorite(widget.type, widget.id, isFavorite);
 

@@ -66,6 +66,7 @@ class MyPageState extends ConsumerState<MyPage> {
               ),
             ],
           ),
+          automaticallyImplyLeading: false,
         ),
         body: TabBarView(
           children: [
