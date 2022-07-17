@@ -9,7 +9,7 @@ class PicturesPage extends ConsumerWidget {
   const PicturesPage({Key? key}) : super(key: key);
 
   // ボトムナビゲーションバーのアクティブタブをアルバムに戻す
-  Future<bool> onWillPop(WidgetRef ref) {
+  Future<bool> changeActiveTab(WidgetRef ref) {
     ref.read(currentTabProvider.state).update((state) => state = 1);
     return Future.value(true); // onWillPop の戻り値はFuture<bool>
   }
@@ -18,7 +18,7 @@ class PicturesPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var albumIndex = ModalRoute.of(context)!.settings.arguments;
     return WillPopScope(
-      onWillPop: () => onWillPop(ref),
+      onWillPop: () => changeActiveTab(ref),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('写真'),
