@@ -95,7 +95,7 @@ class MyBottomNavigationBar extends ConsumerWidget {
         Navigator.of(context).pushNamed('/albums');
         break;
       case 2:
-        Navigator.of(context).pushNamed('/pictures', arguments: null);
+        Navigator.of(context).pushNamed('/pictures');
         break;
       case 3:
         Navigator.of(context).pushNamed('/my-page');

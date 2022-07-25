@@ -24,13 +24,12 @@ Future<List<User>> getUsers() async {
 }
 
 Future<List<Post>> getPostList() async {
-  final List<Post> postList;
   final response = await http.get(
     Uri.parse('$url/posts'),
   );
   if (response.statusCode == 200) {
     final List<dynamic> postData = convert.jsonDecode(response.body);
-    postList = postData.map((e) => Post.fromJson(e)).toList();
+    final postList = postData.map((e) => Post.fromJson(e)).toList();
     return Future<List<Post>>.value(postList);
   } else {
     throw Exception('Failed to fetch data');

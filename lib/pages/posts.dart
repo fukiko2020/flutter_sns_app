@@ -5,37 +5,38 @@ import 'package:flutter_sns_app/models/post.dart';
 import 'package:flutter_sns_app/providers.dart';
 import 'package:flutter_sns_app/repository.dart';
 
-class PostsPage extends ConsumerWidget {
+class PostsPage extends StatelessWidget {
   const PostsPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  // Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('投稿'),
         automaticallyImplyLeading: false,  // 戻るボタンを非表示に
       ),
       body: FutureBuilder<List<Post>>(
-          future: getPostList(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return PostsWidget(postList: snapshot.data!);
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
+        future: getPostList(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return PostsWidget(postList: snapshot.data!);
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
-          ),
+        }
+      ),
       bottomNavigationBar: const MyBottomNavigationBar(),
     );
   }
 }
 
 // 投稿一覧とマイページのお気に入り投稿一覧で使用
-class PostsWidget extends ConsumerWidget {
+class PostsWidget extends StatelessWidget {
   final List<Post> postList;
   final bool isMyPage;
   const PostsWidget({
@@ -45,7 +46,7 @@ class PostsWidget extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return ListView.builder(
       // ListViewは何も指定しないと利用可能なスペースを全て使用してしまう
       // shrinkWrap を true にすると、ListView が必要なスペースのみ使うようになる

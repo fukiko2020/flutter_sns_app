@@ -6,16 +6,13 @@ import 'package:flutter_sns_app/providers.dart';
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({Key? key}) : super(key: key);
 
-  void toggleIsDarkMode(WidgetRef ref) {
-    ref.read(isDarkModeProvider).setIsDarkMode();
-  }
-
   void toFormPage(BuildContext context) {
     Navigator.of(context).pushNamed('/my-page/settings/change-username');
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isDarkMode = ref.watch(isDarkModeProvider).isDarkMode;
     return Scaffold(
       appBar: AppBar(
         title: const Text('設定'),
@@ -36,7 +33,7 @@ class SettingsPage extends ConsumerWidget {
                     Text(
                       '名前を登録',
                       style: TextStyle(
-                        color: ref.watch(isDarkModeProvider).isDarkMode
+                        color: isDarkMode
                             ? Colors.white
                             : Colors.black,
                         fontSize: 16,
@@ -44,7 +41,7 @@ class SettingsPage extends ConsumerWidget {
                     ),
                     Icon(
                       Icons.arrow_forward_ios,
-                      color: ref.watch(isDarkModeProvider).isDarkMode
+                      color: isDarkMode
                           ? Colors.white
                           : Colors.black,
                     ),
@@ -64,27 +61,18 @@ class SettingsPage extends ConsumerWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     'ダークモード',
                     style: TextStyle(
-                      color: ref.watch(isDarkModeProvider).isDarkMode
-                            ? Colors.white
-                            : Colors.black,
                       fontSize: 16,
                     ),
                   ),
-                  Consumer(
-                    builder: (context, ref, child) {
-                      final darkModeState =
-                          ref.watch(isDarkModeProvider).isDarkMode;
-                      return Switch(
-                        value: darkModeState,
-                        onChanged: (value) {
-                          ref.read(isDarkModeProvider).setIsDarkMode();
-                        },
-                      );
+                  Switch(
+                    value: isDarkMode,
+                    onChanged: (value) {
+                      ref.read(isDarkModeProvider).setIsDarkMode();
                     },
-                  ),
+                  )
                 ],
               ),
             ),

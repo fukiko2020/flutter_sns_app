@@ -5,11 +5,11 @@ import 'package:flutter_sns_app/models/album.dart';
 import 'package:flutter_sns_app/providers.dart';
 import 'package:flutter_sns_app/repository.dart';
 
-class AlbumsPage extends ConsumerWidget {
+class AlbumsPage extends StatelessWidget {
   const AlbumsPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('アルバム'),
@@ -35,7 +35,7 @@ class AlbumsPage extends ConsumerWidget {
 }
 
 // アルバム一覧とマイページのお気に入り投稿一覧で使用
-class AlbumsWidget extends ConsumerWidget {
+class AlbumsWidget extends StatelessWidget {
   final List<Album> albumList;
   final bool isMyPage;
   const AlbumsWidget({
@@ -45,7 +45,7 @@ class AlbumsWidget extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,

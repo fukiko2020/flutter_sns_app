@@ -16,7 +16,7 @@ class PicturesPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var albumIndex = ModalRoute.of(context)!.settings.arguments;
+    dynamic albumIndex = ModalRoute.of(context)!.settings.arguments;
     return WillPopScope(
       onWillPop: () => changeActiveTab(ref),
       child: Scaffold(
@@ -60,29 +60,30 @@ class PicturesWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-        ), // カラム数
-        itemCount: pictureList.length,
-        padding: const EdgeInsets.all(8),
-        itemBuilder: (context, index) {
-          final picture = pictureList[index];
-          return Stack(
-            children: [
-              Container(
-                margin: const EdgeInsets.all(2),
-                child: Image.network(picture.thumbnailUrl),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+      ), // カラム数
+      itemCount: pictureList.length,
+      padding: const EdgeInsets.all(8),
+      itemBuilder: (context, index) {
+        final picture = pictureList[index];
+        return Stack(
+          children: [
+            Container(
+              margin: const EdgeInsets.all(2),
+              child: Image.network(picture.thumbnailUrl),
+            ),
+            Container(
+              alignment: Alignment.bottomRight,
+              child: FavoriteWidget(
+                id: picture.id,
+                type: 'picture',
+                isMyPage: isMyPage,
               ),
-              Container(
-                alignment: Alignment.bottomRight,
-                child: FavoriteWidget(
-                  id: picture.id,
-                  type: 'picture',
-                  isMyPage: isMyPage,
-                ),
-              ),
-            ],
-          );
-        });
+            ),
+          ],
+        );
+      },
+    );
   }
 }

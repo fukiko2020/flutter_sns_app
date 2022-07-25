@@ -33,7 +33,6 @@ class ChangeNamePageState extends ConsumerState<ChangeNamePage> {
       appBar: AppBar(
         title: const Text('ユーザー名を変更'),
       ),
-      // body:
       body: Form(
         key: formKey,
         child: Center(

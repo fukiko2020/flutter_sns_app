@@ -6,7 +6,7 @@ import 'package:flutter_sns_app/models/post.dart';
 import 'package:flutter_sns_app/models/user.dart';
 import 'package:flutter_sns_app/repository.dart';
 
-// BottomNavigationBar の選択中タブ 最初は投稿一覧ページ
+// BottomNavigationBar の選択中タブ i最初は投稿一覧ページ
 final currentTabProvider = StateProvider<int>((ref) => 0);
 
 // 投稿・アルバムの投稿者情報表示に使用
@@ -99,8 +99,9 @@ class FavoritePictureNotifier extends ChangeNotifier {
 // マイページの「○○のお気に入り」に使用
 final usernameProvider = StateProvider((ref) => 'ゲスト');
 
-final isDarkModeProvider =
-    ChangeNotifierProvider<IsDarkModeNotifier>((ref) => IsDarkModeNotifier());
+final isDarkModeProvider = ChangeNotifierProvider<IsDarkModeNotifier>(
+  (ref) => IsDarkModeNotifier(),
+);
 
 class IsDarkModeNotifier extends ChangeNotifier {
   bool isDarkMode = false;
@@ -113,21 +114,6 @@ class IsDarkModeNotifier extends ChangeNotifier {
   void setIsDarkMode() {
     setIsDarkModeData(currentValue: isDarkMode);
     isDarkMode = !isDarkMode;
-    notifyListeners();
-  }
-}
-
-// アルバムの背景画像を設定
-final backImageProvider = ChangeNotifierProvider<BackImageNotifier>(
-  (ref) => BackImageNotifier(),
-);
-
-class BackImageNotifier extends ChangeNotifier {
-  String imgUrl = '';
-
-  Future getBackImage(int albumIndex) async {
-    final pictureList = await getPictureList(albumIndex: albumIndex);
-    imgUrl = pictureList[0].thumbnailUrl;
     notifyListeners();
   }
 }
