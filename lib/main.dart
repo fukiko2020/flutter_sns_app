@@ -35,17 +35,15 @@ class MySnsAppState extends ConsumerState<MySnsApp> {
     final isDarkMode = ref.watch(isDarkModeProvider).isDarkMode;
     return MaterialApp(
       title: 'Flutter SNS App',
-      theme: isDarkMode
-      ? ThemeData.dark()
-      : ThemeData.light(),
+      theme: isDarkMode ? ThemeData.dark() : ThemeData.light(),
       initialRoute: '/',
       routes: {
         '/': (context) => const PostsPage(),
         '/albums': (context) => const AlbumsPage(),
         '/pictures': (context) => const PicturesPage(),
-        '/my-page': (context) => const MyPage(),
-        '/my-page/settings': (context) => const SettingsPage(),
-        '/my-page/settings/change-username': (context) =>
+        '/my_page': (context) => const MyPage(),
+        '/my_page/settings': (context) => const SettingsPage(),
+        '/my_page/settings/change_username': (context) =>
             const ChangeNamePage(),
       },
     );

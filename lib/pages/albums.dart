@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sns_app/common_parts.dart';
 import 'package:flutter_sns_app/models/album.dart';
 import 'package:flutter_sns_app/providers.dart';
-import 'package:flutter_sns_app/repository.dart';
+import 'package:flutter_sns_app/repositories/album.dart';
+import 'package:flutter_sns_app/repositories/picture.dart';
 
 class AlbumsPage extends StatelessWidget {
   const AlbumsPage({Key? key}) : super(key: key);

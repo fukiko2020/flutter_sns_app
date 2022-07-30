@@ -5,7 +5,7 @@ import 'package:flutter_sns_app/pages/albums.dart';
 import 'package:flutter_sns_app/pages/pictures.dart';
 import 'package:flutter_sns_app/pages/posts.dart';
 import 'package:flutter_sns_app/providers.dart';
-import 'package:flutter_sns_app/repository.dart';
+import 'package:flutter_sns_app/repositories/user.dart';
 
 class MyPage extends ConsumerStatefulWidget {
   const MyPage({Key? key}) : super(key: key);
@@ -44,7 +44,7 @@ class MyPageState extends ConsumerState<MyPage> {
           actions: [
             IconButton(
               onPressed: () =>
-                  Navigator.of(context).pushNamed('/my-page/settings'),
+                  Navigator.of(context).pushNamed('/my_page/settings'),
               icon: const Icon(Icons.settings),
               iconSize: 28,
             ),

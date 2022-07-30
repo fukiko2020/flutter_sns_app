@@ -7,7 +7,7 @@ class SettingsPage extends ConsumerWidget {
   const SettingsPage({Key? key}) : super(key: key);
 
   void toFormPage(BuildContext context) {
-    Navigator.of(context).pushNamed('/my-page/settings/change-username');
+    Navigator.of(context).pushNamed('/my_page/settings/change_username');
   }
 
   @override
@@ -33,17 +33,13 @@ class SettingsPage extends ConsumerWidget {
                     Text(
                       '名前を登録',
                       style: TextStyle(
-                        color: isDarkMode
-                            ? Colors.white
-                            : Colors.black,
+                        color: isDarkMode ? Colors.white : Colors.black,
                         fontSize: 16,
                       ),
                     ),
                     Icon(
                       Icons.arrow_forward_ios,
-                      color: isDarkMode
-                          ? Colors.white
-                          : Colors.black,
+                      color: isDarkMode ? Colors.white : Colors.black,
                     ),
                   ],
                 ),

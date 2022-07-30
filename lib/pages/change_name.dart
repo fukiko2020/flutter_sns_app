@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sns_app/providers.dart';
-import 'package:flutter_sns_app/repository.dart';
+import 'package:flutter_sns_app/repositories/user.dart';
 
 class ChangeNamePage extends ConsumerStatefulWidget {
   const ChangeNamePage({Key? key}) : super(key: key);

@@ -3,13 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sns_app/common_parts.dart';
 import 'package:flutter_sns_app/models/post.dart';
 import 'package:flutter_sns_app/providers.dart';
-import 'package:flutter_sns_app/repository.dart';
+import 'package:flutter_sns_app/repositories/post.dart';
 
 class PostsPage extends StatelessWidget {
   const PostsPage({Key? key}) : super(key: key);
 
   @override
-  // Widget build(BuildContext context, WidgetRef ref) {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sns_app/providers.dart';
-import 'package:flutter_sns_app/repository.dart';
+import 'package:flutter_sns_app/repositories/common.dart';
+import 'package:flutter_sns_app/repositories/picture.dart';
 
 class FavoriteWidget extends ConsumerStatefulWidget {
   final int id;
@@ -98,7 +99,7 @@ class MyBottomNavigationBar extends ConsumerWidget {
         Navigator.of(context).pushNamed('/pictures');
         break;
       case 3:
-        Navigator.of(context).pushNamed('/my-page');
+        Navigator.of(context).pushNamed('/my_page');
         break;
     }
   }

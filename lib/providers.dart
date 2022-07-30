@@ -4,7 +4,11 @@ import 'package:flutter_sns_app/models/album.dart';
 import 'package:flutter_sns_app/models/picture.dart';
 import 'package:flutter_sns_app/models/post.dart';
 import 'package:flutter_sns_app/models/user.dart';
-import 'package:flutter_sns_app/repository.dart';
+import 'package:flutter_sns_app/repositories/album.dart';
+import 'package:flutter_sns_app/repositories/common.dart';
+import 'package:flutter_sns_app/repositories/picture.dart';
+import 'package:flutter_sns_app/repositories/post.dart';
+import 'package:flutter_sns_app/repositories/user.dart';
 
 // BottomNavigationBar の選択中タブ i最初は投稿一覧ページ
 final currentTabProvider = StateProvider<int>((ref) => 0);
