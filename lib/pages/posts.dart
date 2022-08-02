@@ -2,32 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sns_app/common_parts.dart';
 import 'package:flutter_sns_app/models/post.dart';
-import 'package:flutter_sns_app/providers.dart';
-import 'package:flutter_sns_app/repositories/post.dart';
+import 'package:flutter_sns_app/providers/post.dart';
+import 'package:flutter_sns_app/providers/user.dart';
 
-class PostsPage extends StatelessWidget {
+class PostsPage extends ConsumerWidget {
   const PostsPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final postList = ref.watch(postListProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('投稿'),
-        automaticallyImplyLeading: false,  // 戻るボタンを非表示に
+        automaticallyImplyLeading: false, // 戻るボタンを非表示に
       ),
-      body: FutureBuilder<List<Post>>(
-        future: getPostList(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return PostsWidget(postList: snapshot.data!);
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        }
+      body: postList.when(
+        data: (data) => PostsWidget(postList: data),
+        error: (err, stack) => Text('Error: $err'),
+        loading: () => const Center(
+          child: CircularProgressIndicator(),
+        ),
       ),
       bottomNavigationBar: const MyBottomNavigationBar(),
     );

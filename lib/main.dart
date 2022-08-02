@@ -6,7 +6,7 @@ import 'package:flutter_sns_app/pages/mypage.dart';
 import 'package:flutter_sns_app/pages/pictures.dart';
 import 'package:flutter_sns_app/pages/posts.dart';
 import 'package:flutter_sns_app/pages/settings.dart';
-import 'package:flutter_sns_app/providers.dart';
+import 'package:flutter_sns_app/providers/common.dart';
 
 void main() {
   runApp(
@@ -16,22 +16,12 @@ void main() {
   );
 }
 
-class MySnsApp extends ConsumerStatefulWidget {
+class MySnsApp extends ConsumerWidget {
   const MySnsApp({Key? key}) : super(key: key);
 
   @override
-  MySnsAppState createState() => MySnsAppState();
-}
-
-class MySnsAppState extends ConsumerState<MySnsApp> {
-  @override
-  void initState() {
-    ref.read(isDarkModeProvider).getIsDarkMode();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.read(isDarkModeProvider).getIsDarkMode;
     final isDarkMode = ref.watch(isDarkModeProvider).isDarkMode;
     return MaterialApp(
       title: 'Flutter SNS App',
@@ -41,10 +31,10 @@ class MySnsAppState extends ConsumerState<MySnsApp> {
         '/': (context) => const PostsPage(),
         '/albums': (context) => const AlbumsPage(),
         '/pictures': (context) => const PicturesPage(),
-        '/my_page': (context) => const MyPage(),
+        '/my_page': (context) => MyPage(),
         '/my_page/settings': (context) => const SettingsPage(),
         '/my_page/settings/change_username': (context) =>
-            const ChangeNamePage(),
+            ChangeNamePage(),
       },
     );
   }

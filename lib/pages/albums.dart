@@ -2,33 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sns_app/common_parts.dart';
 import 'package:flutter_sns_app/models/album.dart';
-import 'package:flutter_sns_app/providers.dart';
-import 'package:flutter_sns_app/repositories/album.dart';
-import 'package:flutter_sns_app/repositories/picture.dart';
+import 'package:flutter_sns_app/providers/album.dart';
+import 'package:flutter_sns_app/providers/common.dart';
+import 'package:flutter_sns_app/providers/user.dart';
 
-class AlbumsPage extends StatelessWidget {
+class AlbumsPage extends ConsumerWidget {
   const AlbumsPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final albumList = ref.watch(albumListProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('アルバム'),
         automaticallyImplyLeading: false,
       ),
-      body: FutureBuilder<List<Album>>(
-        future: getAlbumList(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return AlbumsWidget(albumList: snapshot.data!);
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
+      body: albumList.when(
+        data: (data) => AlbumsWidget(albumList: data),
+        error: (err, stack) => Text('Error: $err'),
+        loading: () => const Center(
+          child: CircularProgressIndicator(),
+        ),
       ),
       bottomNavigationBar: const MyBottomNavigationBar(),
     );
@@ -65,7 +59,7 @@ class AlbumsWidget extends StatelessWidget {
   }
 }
 
-class AlbumWidget extends ConsumerStatefulWidget {
+class AlbumWidget extends ConsumerWidget {
   final int id;
   final Album album;
   final bool isMyPage;
@@ -77,26 +71,6 @@ class AlbumWidget extends ConsumerStatefulWidget {
     this.isMyPage = false,
   });
 
-  @override
-  ConsumerState<AlbumWidget> createState() => AlbumWidgetState();
-}
-
-class AlbumWidgetState extends ConsumerState<AlbumWidget> {
-  String backImgUrl = '';
-
-  @override
-  void initState() {
-    super.initState();
-    Future(() async {
-      final backImg = await getPictureList(albumIndex: widget.id);
-      setState(
-        () {
-          backImgUrl = backImg[0].thumbnailUrl;
-        },
-      );
-    });
-  }
-
   void toPicturesPage(int albumIndex, BuildContext context, WidgetRef ref) {
     ref.read(currentTabProvider.state).update((state) => 2); // タブをpictures にする
     Navigator.of(context).pushNamed(
@@ -106,15 +80,18 @@ class AlbumWidgetState extends ConsumerState<AlbumWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final userList = ref.watch(userListProvider);
+    ref.read(backImgProvider(album.id)).getBackImg();
     return GestureDetector(
-      onTap: () => toPicturesPage(widget.id, context, ref),
+      onTap: () => toPicturesPage(id, context, ref),
       child: Container(
         padding: const EdgeInsets.only(left: 8, top: 20, right: 8),
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage(backImgUrl),
+            image: NetworkImage(
+              ref.watch(backImgProvider(album.id)).imgUrl,
+            ),
             colorFilter: ColorFilter.mode(
               Colors.white.withOpacity(0.6),
               BlendMode.dstATop,
@@ -134,21 +111,21 @@ class AlbumWidgetState extends ConsumerState<AlbumWidget> {
                       Container(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          data[widget.album.userId].name,
+                          data[album.userId].name,
                         ),
                       ),
                       Container(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          '@${data[widget.album.userId].username}',
+                          '@${data[album.userId].username}',
                         ),
                       ),
                     ],
                   ),
                   FavoriteWidget(
-                    id: widget.id,
+                    id: id,
                     type: 'album',
-                    isMyPage: widget.isMyPage,
+                    isMyPage: isMyPage,
                   ),
                 ],
               ),
@@ -156,7 +133,7 @@ class AlbumWidgetState extends ConsumerState<AlbumWidget> {
                 alignment: Alignment.centerLeft,
                 margin: const EdgeInsets.only(top: 8),
                 child: Text(
-                  widget.album.title,
+                  album.title,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

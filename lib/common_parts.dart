@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_sns_app/providers.dart';
+import 'package:flutter_sns_app/providers/album.dart';
+import 'package:flutter_sns_app/providers/common.dart';
+import 'package:flutter_sns_app/providers/picture.dart';
+import 'package:flutter_sns_app/providers/post.dart';
 import 'package:flutter_sns_app/repositories/common.dart';
 import 'package:flutter_sns_app/repositories/picture.dart';
+import 'package:tuple/tuple.dart';
 
-class FavoriteWidget extends ConsumerStatefulWidget {
+class FavoriteWidget extends ConsumerWidget {
   final int id;
   final String type; // 'post' or 'album' or 'picture'
+
   final bool isMyPage;
   const FavoriteWidget({
     super.key,
@@ -15,67 +20,58 @@ class FavoriteWidget extends ConsumerStatefulWidget {
     this.isMyPage = false,
   });
 
-  @override
-  ConsumerState<FavoriteWidget> createState() => FavoriteWidgetState();
-}
-
-class FavoriteWidgetState extends ConsumerState<FavoriteWidget> {
-  late bool isFavorite = false;
-
-  @override
-  void initState() {
-    super.initState();
-    Future(
-      () async {
-        final favoriteData = await getFavorite(widget.type, widget.id);
-        setState(
-          () {
-            isFavorite = favoriteData;
-          },
-        );
-      },
-    );
-  }
-
-  void _toggleFavorite() async {
-    setFavorite(widget.type, widget.id, isFavorite: isFavorite);
+  void _toggleFavorite(WidgetRef ref, Tuple2<String, int> itemInfo) async {
+    ref.read(favoriteProvider(itemInfo)).setItemFavorite();
 
     // アルバムにいいね/解除でそのアルバムに属する写真もいいね/解除
-    if (widget.type == 'album') {
-      final newFavorites = await getPictureList(albumIndex: widget.id);
+    if (type == 'album') {
+      final newFavorites = await getPictureList(albumIndex: id);
       for (final item in newFavorites) {
-        setFavorite('picture', item.id, isFavorite: isFavorite);
+        setFavorite(
+          'picture',
+          item.id,
+          isFavorite: ref
+              .read(
+                favoriteProvider(
+                  itemInfo,
+                ),
+              )
+              .isFavorite,
+        );
       }
     }
 
     // マイページのお気に入り一覧からなら表示リストから削除
-    if (widget.isMyPage) {
-      switch (widget.type) {
+    if (isMyPage) {
+      switch (type) {
         case 'post':
-          ref.read(favoritePostsProvider).removeMyPageFavorite(widget.id);
+          ref.read(favoritePostsProvider).removeMyPageFavorite(id);
           break;
         case 'album':
-          ref.read(favoriteAlbumsProvider).removeMyPageFavorite(widget.id);
+          ref.read(favoriteAlbumsProvider).removeMyPageFavorite(id);
           break;
         case 'picture':
-          ref.read(favoritePicturesProvider).removeMyPageFavorite(widget.id);
+          ref.read(favoritePicturesProvider).removeMyPageFavorite(id);
           break;
       }
-    } else {
-      // 投稿一覧/アルバム一覧/写真一覧ページからならステートを変更
-      setState(
-        () {
-          isFavorite = !isFavorite;
-        },
-      );
     }
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final itemInfo = Tuple2<String, int>(type, id);
+    final initialized = ref.watch(
+      favoriteProvider(itemInfo).select((value) => value.initialized),
+    );
+    if (!initialized) {
+      ref.read(favoriteProvider(itemInfo)).getItemFavorite();
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return IconButton(
-      onPressed: _toggleFavorite,
-      icon: isFavorite
+      onPressed: () => _toggleFavorite(ref, itemInfo),
+      icon: ref.watch(favoriteProvider(itemInfo)).isFavorite
           ? const Icon(Icons.favorite)
           : const Icon(Icons.favorite_border),
       color: Colors.pink,

@@ -1,34 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_sns_app/providers.dart';
+import 'package:flutter_sns_app/providers/user.dart';
 import 'package:flutter_sns_app/repositories/user.dart';
 
-class ChangeNamePage extends ConsumerStatefulWidget {
-  const ChangeNamePage({Key? key}) : super(key: key);
-
-  @override
-  ConsumerState<ChangeNamePage> createState() => ChangeNamePageState();
-}
-
-class ChangeNamePageState extends ConsumerState<ChangeNamePage> {
+class ChangeNamePage extends ConsumerWidget {
   final formKey = GlobalKey<FormState>();
-  String formValue = '';
+
+  ChangeNamePage({Key? key}) : super(key: key);
 
   @override
-  void initState() {
-    super.initState();
-    Future(() async {
-      final usernameData = await getUsername();
-      setState(
-        () {
-          formValue = usernameData;
-        },
-      );
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('ユーザー名を変更'),
@@ -44,12 +25,17 @@ class ChangeNamePageState extends ConsumerState<ChangeNamePage> {
                 padding: const EdgeInsets.all(4.0),
                 width: 300,
                 child: TextFormField(
-                  initialValue: formValue,
+                  // SharedPreferences に保存されている値を初期値に指定
+                  initialValue: ref.watch(usernameProvider),
                   decoration: const InputDecoration(
                     labelText: 'ユーザー名',
                   ),
                   onSaved: (value) {
-                    formValue = value.toString();
+                    final valueStr = value.toString();
+                    setUsername(valueStr);
+                    ref
+                        .read(usernameProvider.state)
+                        .update((state) => valueStr);
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -68,10 +54,6 @@ class ChangeNamePageState extends ConsumerState<ChangeNamePage> {
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
                       formKey.currentState?.save();
-                      setUsername(formValue);
-                      ref
-                          .read(usernameProvider.state)
-                          .update((state) => formValue);
                       Navigator.of(context).pop();
                     }
                   },

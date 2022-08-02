@@ -1,6 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 // type ('post' / 'album' / 'picture') の指定された id のいいね状態を取得
 Future<bool> getFavorite(String type, int id) async {
   final data = await SharedPreferences.getInstance();
@@ -13,7 +12,6 @@ void setFavorite(String type, int id, {bool isFavorite = false}) async {
   final data = await SharedPreferences.getInstance();
   data.setBool('$type$id', !isFavorite);
 }
-
 
 // ダークモード設定を取得
 Future<bool> getIsDarkModeData() async {

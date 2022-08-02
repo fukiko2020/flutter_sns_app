@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sns_app/common_parts.dart';
 import 'package:flutter_sns_app/models/picture.dart';
-import 'package:flutter_sns_app/providers.dart';
-import 'package:flutter_sns_app/repositories/picture.dart';
+import 'package:flutter_sns_app/providers/common.dart';
+import 'package:flutter_sns_app/providers/picture.dart';
 
 class PicturesPage extends ConsumerWidget {
   const PicturesPage({Key? key}) : super(key: key);
@@ -17,6 +17,7 @@ class PicturesPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     dynamic albumIndex = ModalRoute.of(context)!.settings.arguments;
+    final pictureList = ref.watch(pictureListProvider(albumIndex));
     return WillPopScope(
       onWillPop: () => changeActiveTab(ref),
       child: Scaffold(
@@ -25,21 +26,12 @@ class PicturesPage extends ConsumerWidget {
           // アルバムをクリックして遷移してきたなら戻るボタンあり、ボトムバー空の遷移なら戻るボタン無し
           automaticallyImplyLeading: albumIndex == null ? false : true,
         ),
-        body: FutureBuilder<List<Picture>>(
-          future: albumIndex == null
-              ? getPictureList()
-              : getPictureList(albumIndex: albumIndex as int),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return PicturesWidget(pictureList: snapshot.data!);
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
+        body: pictureList.when(
+          data: (data) => PicturesWidget(pictureList: data),
+          error: (err, stack) => Text('Error: $err'),
+          loading: () => const Center(
+            child: CircularProgressIndicator(),
+          ),
         ),
         bottomNavigationBar: const MyBottomNavigationBar(),
       ),

@@ -4,19 +4,16 @@ import 'package:flutter_sns_app/common_parts.dart';
 import 'package:flutter_sns_app/pages/albums.dart';
 import 'package:flutter_sns_app/pages/pictures.dart';
 import 'package:flutter_sns_app/pages/posts.dart';
-import 'package:flutter_sns_app/providers.dart';
+import 'package:flutter_sns_app/providers/album.dart';
+import 'package:flutter_sns_app/providers/picture.dart';
+import 'package:flutter_sns_app/providers/post.dart';
+import 'package:flutter_sns_app/providers/user.dart';
 import 'package:flutter_sns_app/repositories/user.dart';
 
-class MyPage extends ConsumerStatefulWidget {
+class MyPage extends ConsumerWidget {
   const MyPage({Key? key}) : super(key: key);
 
-  @override
-  ConsumerState<MyPage> createState() => MyPageState();
-}
-
-class MyPageState extends ConsumerState<MyPage> {
-  @override
-  void initState() {
+  void init(WidgetRef ref) {
     ref.read(favoritePostsProvider).getFavoritePostList();
     ref.read(favoriteAlbumsProvider).getFavoriteAlbumList();
     ref.read(favoritePicturesProvider).getFavoritePictureList();
@@ -28,11 +25,11 @@ class MyPageState extends ConsumerState<MyPage> {
             );
       },
     );
-    super.initState();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    init(ref);
     final postListProvider = ref.watch(favoritePostsProvider);
     final albumListProvider = ref.watch(favoriteAlbumsProvider);
     final pictureListProvider = ref.watch(favoritePicturesProvider);
