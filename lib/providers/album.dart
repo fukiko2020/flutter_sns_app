@@ -11,6 +11,27 @@ final albumListProvider = FutureProvider<List<Album>>(
   },
 );
 
+final backImgProvider = ChangeNotifierProvider.family<BackImgNotifier, int>(
+  (ref, albumId) {
+    return BackImgNotifier(albumId: albumId);
+  },
+);
+
+class BackImgNotifier extends ChangeNotifier {
+  final int albumId;
+  String imgUrl = '';
+
+  BackImgNotifier({
+    required this.albumId,
+  });
+
+  Future getBackImg() async {
+    final backImg = await getPictureList(albumId: albumId);
+    imgUrl = backImg[0].thumbnailUrl;
+    notifyListeners();
+  }
+}
+
 final favoriteAlbumsProvider = ChangeNotifierProvider<FavoriteAlbumNotifier>(
     (ref) => FavoriteAlbumNotifier());
 
@@ -33,28 +54,6 @@ class FavoriteAlbumNotifier extends ChangeNotifier {
   void removeMyPageFavorite(int id) {
     final removedItem = favoriteList.firstWhere((element) => element.id == id);
     favoriteList.remove(removedItem);
-    notifyListeners();
-  }
-}
-
-final backImgProvider =
-    ChangeNotifierProvider.family<BackImgNotifier, int>(
-  (ref, albumId) {
-    return BackImgNotifier(albumId: albumId);
-  },
-);
-
-class BackImgNotifier extends ChangeNotifier {
-  final int albumId;
-  String imgUrl = '';
-
-  BackImgNotifier({
-    required this.albumId,
-  });
-
-  Future getBackImg() async {
-    final backImg = await getPictureList(albumIndex: albumId);
-    imgUrl = backImg[0].thumbnailUrl;
     notifyListeners();
   }
 }

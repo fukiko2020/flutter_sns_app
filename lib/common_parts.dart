@@ -11,8 +11,8 @@ import 'package:tuple/tuple.dart';
 class FavoriteWidget extends ConsumerWidget {
   final int id;
   final String type; // 'post' or 'album' or 'picture'
-
   final bool isMyPage;
+
   const FavoriteWidget({
     super.key,
     required this.id,
@@ -25,7 +25,7 @@ class FavoriteWidget extends ConsumerWidget {
 
     // アルバムにいいね/解除でそのアルバムに属する写真もいいね/解除
     if (type == 'album') {
-      final newFavorites = await getPictureList(albumIndex: id);
+      final newFavorites = await getPictureList(albumId: id);
       for (final item in newFavorites) {
         setFavorite(
           'picture',

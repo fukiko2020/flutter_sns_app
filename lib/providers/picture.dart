@@ -4,10 +4,9 @@ import 'package:flutter_sns_app/models/picture.dart';
 import 'package:flutter_sns_app/repositories/common.dart';
 import 'package:flutter_sns_app/repositories/picture.dart';
 
-
 final pictureListProvider = FutureProvider.family<List<Picture>, int?>(
-  (ref, albumIndex) async {
-    return await getPictureList(albumIndex: albumIndex);
+  (ref, albumId) async {
+    return await getPictureList(albumId: albumId);
   },
 );
 

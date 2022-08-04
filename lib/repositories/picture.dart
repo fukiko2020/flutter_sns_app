@@ -3,10 +3,9 @@ import 'package:flutter_sns_app/constants.dart';
 import 'package:flutter_sns_app/models/picture.dart';
 import 'package:http/http.dart' as http;
 
-
-Future<List<Picture>> getPictureList({int? albumIndex}) async {
+Future<List<Picture>> getPictureList({int? albumId}) async {
   final List<Picture> pictureList;
-  final queryParam = albumIndex == null ? '' : '?albumId=$albumIndex';
+  final queryParam = albumId == null ? '' : '?albumId=$albumId';
   final response = await http.get(
     Uri.parse('$url/photos$queryParam'),
   );

@@ -11,12 +11,13 @@ class AlbumsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final albumList = ref.watch(albumListProvider);
+    final albumList = ref.watch(albumListProvider);  // アルバム一覧データをプロバイダで監視
     return Scaffold(
       appBar: AppBar(
         title: const Text('アルバム'),
         automaticallyImplyLeading: false,
       ),
+      // when メソッドを使用し、albumList の取得状況に応じて表示を変える
       body: albumList.when(
         data: (data) => AlbumsWidget(albumList: data),
         error: (err, stack) => Text('Error: $err'),
@@ -29,9 +30,9 @@ class AlbumsPage extends ConsumerWidget {
   }
 }
 
-// アルバム一覧とマイページのお気に入り投稿一覧で使用
+// アルバム一覧とマイページのお気に入り投稿一覧で使用するため、AlbumsPage から切り分けて定義
 class AlbumsWidget extends StatelessWidget {
-  final List<Album> albumList;
+  final List<Album> albumList; // 表示するアルバムデータを親ウィジェットから受け取る
   final bool isMyPage;
   const AlbumsWidget({
     super.key,
@@ -52,8 +53,8 @@ class AlbumsWidget extends StatelessWidget {
       shrinkWrap: true,
       itemBuilder: (context, index) {
         final album = albumList[index];
+        // itemBuilder の戻り値でウィジェットを返す
         return AlbumWidget(id: album.id, album: album, isMyPage: isMyPage);
-        // }
       },
     );
   }
@@ -71,18 +72,18 @@ class AlbumWidget extends ConsumerWidget {
     this.isMyPage = false,
   });
 
-  void toPicturesPage(int albumIndex, BuildContext context, WidgetRef ref) {
-    ref.read(currentTabProvider.state).update((state) => 2); // タブをpictures にする
+  void toPicturesPage(int albumId, BuildContext context, WidgetRef ref) {
+    ref.read(currentTabProvider.state).update((state) => 2); // アクティブタブをpictures にする
     Navigator.of(context).pushNamed(
       '/pictures',
-      arguments: albumIndex,
+      arguments: albumId,
     );
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userList = ref.watch(userListProvider);
-    ref.read(backImgProvider(album.id)).getBackImg();
+    ref.read(backImgProvider(album.id)).getBackImg();  // 背景画像 URL を取得
     return GestureDetector(
       onTap: () => toPicturesPage(id, context, ref),
       child: Container(
@@ -101,6 +102,7 @@ class AlbumWidget extends ConsumerWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
+          // userList の取得状況に応じて表示を変える
           children: userList.when(
             data: (data) => [
               Row(

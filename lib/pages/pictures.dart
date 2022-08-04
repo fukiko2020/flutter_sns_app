@@ -16,16 +16,19 @@ class PicturesPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    dynamic albumIndex = ModalRoute.of(context)!.settings.arguments;
-    final pictureList = ref.watch(pictureListProvider(albumIndex));
+    // albumId を取得（渡していなければ null になる）
+    dynamic albumId = ModalRoute.of(context)!.settings.arguments;
+    // プロバイダで監視
+    final pictureList = ref.watch(pictureListProvider(albumId));
     return WillPopScope(
       onWillPop: () => changeActiveTab(ref),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('写真'),
           // アルバムをクリックして遷移してきたなら戻るボタンあり、ボトムバー空の遷移なら戻るボタン無し
-          automaticallyImplyLeading: albumIndex == null ? false : true,
+          automaticallyImplyLeading: albumId == null ? false : true,
         ),
+        // 1. when メソッドを使用
         body: pictureList.when(
           data: (data) => PicturesWidget(pictureList: data),
           error: (err, stack) => Text('Error: $err'),
@@ -39,9 +42,9 @@ class PicturesPage extends ConsumerWidget {
   }
 }
 
-// 写真一覧とマイページのお気に入り投稿一覧で使用
+// 写真一覧とマイページのお気に入り写真一覧で使用するため、PicturesPage から切り分けて定義
 class PicturesWidget extends ConsumerWidget {
-  final List<Picture> pictureList;
+  final List<Picture> pictureList; // 表示する写真データを親ウィジェットから受け取る
   final bool isMyPage;
   const PicturesWidget({
     super.key,
@@ -51,14 +54,16 @@ class PicturesWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // GridView を使用してマス目状の UI を作る
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
       ), // カラム数
-      itemCount: pictureList.length,
+      itemCount: pictureList.length, // 要素数
       padding: const EdgeInsets.all(8),
       itemBuilder: (context, index) {
         final picture = pictureList[index];
+        // itemBuilder の戻り値でウィジェットを返す
         return Stack(
           children: [
             Container(

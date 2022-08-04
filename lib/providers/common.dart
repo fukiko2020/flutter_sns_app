@@ -19,8 +19,8 @@ final favoriteProvider =
 class FavoriteNotifier extends ChangeNotifier {
   final String type;
   final int id;
-  bool initialized = false;
   bool isFavorite = false;
+  bool initialized = false;
 
   FavoriteNotifier({
     required this.type,
@@ -58,5 +58,3 @@ class IsDarkModeNotifier extends ChangeNotifier {
     notifyListeners();
   }
 }
-
-
